@@ -76,7 +76,7 @@ def test_get_list():
 def test_get_task():
     task_id = 1
     response = client.get(
-        f'task/{task_id}',
+        f'task/{task_id}/',
         headers={'X-Token': TEST_TOKEN},
     )
 
@@ -90,7 +90,7 @@ def test_get_task():
 
 def test_create_task():
     response = client.post(
-        "create",
+        "create/",
         headers={'X-Token': TEST_TOKEN},
         json={"title": "Test", "description": "Some text", "due_date": "2025-06-26", "status": "IN_PROGRESS"}
     )
@@ -106,7 +106,7 @@ def test_create_task():
 def test_update():
     task_id = 1
     response = client.patch(
-        f"update/{task_id}",
+        f"update/{task_id}/",
         headers={'X-Token': TEST_TOKEN},
         json={'status': 'DONE'}
     )
@@ -118,7 +118,7 @@ def test_update():
 
 def test_delete():
     task_id = 1
-    response = client.delete(f'delete/{task_id}', headers={'X-Token': TEST_TOKEN})
+    response = client.delete(f'delete/{task_id}/', headers={'X-Token': TEST_TOKEN})
     assert response.status_code == 200, response.text
     task = response.json()
     assert task['id'] == task_id

@@ -34,6 +34,7 @@ def tasks_list(db: Session = Depends(get_db),
                             from_date: date | None = None, to_date: date | None = None):
     q = db.query(Task)
     if tasks_status:
+        tasks_status = tasks_status.replace(' ', '_').upper()
         q = q.filter(Task.status == tasks_status)
 
     if from_date:
@@ -44,12 +45,12 @@ def tasks_list(db: Session = Depends(get_db),
     return q.all()
 
 
-@app.get('/task/{pk}', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
+@app.get('/task/{pk}/', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
 def get_task(pk: int, db: Session = Depends(get_db)):
     return get_task_or_404(pk, db)
 
 
-@app.post('/create', status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_token)])
+@app.post('/create/', status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_token)])
 def create(task_schema: schemas.TaskBase, db: Session = Depends(get_db)):
     new_task = Task(title=task_schema.title, description=task_schema.description, due_date=task_schema.due_date,
                     status=task_schema.status)
@@ -59,7 +60,7 @@ def create(task_schema: schemas.TaskBase, db: Session = Depends(get_db)):
     return new_task
 
 
-@app.patch('/update/{pk}', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
+@app.patch('/update/{pk}/', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
 def update(pk: int, task_schema: schemas.TaskUpdate, db: Session = Depends(get_db)):
     task = get_task_or_404(pk, db)
     task_data = task_schema.model_dump(exclude_unset=True)
@@ -69,7 +70,7 @@ def update(pk: int, task_schema: schemas.TaskUpdate, db: Session = Depends(get_d
     return task
 
 
-@app.delete('/delete/{pk}', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
+@app.delete('/delete/{pk}/', status_code=status.HTTP_200_OK, dependencies=[Depends(verify_token)])
 def destroy(pk: int, db: Session = Depends(get_db)) -> Response:
     task = get_task_or_404(pk, db)
     db.delete(task)
