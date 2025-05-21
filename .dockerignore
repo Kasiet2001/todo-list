@@ -1,0 +1,14 @@
+#python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+.env
+.git
+
+#Evniroment
+../venv
+
+#Specific
+*.md

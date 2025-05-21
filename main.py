@@ -4,7 +4,6 @@ from typing import Annotated
 from fastapi import FastAPI, Depends, HTTPException, Header, status, Response
 from sqlalchemy.orm import Session
 
-import models
 from schemas import StatusEnum
 import schemas
 from db import get_db

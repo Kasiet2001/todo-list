@@ -19,5 +19,3 @@ class Task(Base):
     description = Column(String)
     due_date = Column(Date)
     status = Column(Enum(TaskStatus))
-
-

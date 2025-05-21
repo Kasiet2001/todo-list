@@ -66,19 +66,41 @@ def verify_test_token(x_token: Annotated[str, Header()]):
 app.dependency_overrides[verify_token] = verify_test_token
 
 
+def test_get_list():
+    response = client.get(
+        '/',
+        headers={'X-Token': TEST_TOKEN})
+    assert response.status_code == 200
+
+
+def test_get_task():
+    task_id = 1
+    response = client.get(
+        f'task/{task_id}',
+        headers={'X-Token': TEST_TOKEN},
+    )
+
+    assert response.status_code == 200, response.text
+    task = response.json()
+    assert task['title'] == 'Task1'
+    assert task['description'] == 'testing tests'
+    assert task['due_date'] == '2025-05-19'
+    assert task['status'] == 'NEW'
+
+
 def test_create_task():
     response = client.post(
         "create",
         headers={'X-Token': TEST_TOKEN},
-        json={"title": "Test", "description": "Some text", "due_date": "2025-05-19", "status": "IN_PROGRESS"}
+        json={"title": "Test", "description": "Some text", "due_date": "2025-06-26", "status": "IN_PROGRESS"}
     )
     assert response.status_code == 201, response.text
     task = response.json()
     assert task is not None
     assert task['title'] == "Test"
     assert task['description'] == "Some text"
-    assert task['due_date'] == '2025-05-19'
-    assert task['status'] == TaskStatus.IN_PROGRESS
+    assert task['due_date'] == '2025-06-26'
+    assert task['status'] == "IN_PROGRESS"
 
 
 def test_update():
